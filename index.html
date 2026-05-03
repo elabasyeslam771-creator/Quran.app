@@ -12,29 +12,560 @@
     <meta name="apple-mobile-web-app-title" content="الرحيق المختوم">
     <link rel="manifest" href="manifest.json">
     
-    <!-- أيقونات -->
-    <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a7a5a'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='%23c9a24d'>ﷲ</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a7a5a'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='%23c9a24d'>ﷲ</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a7a5a'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='%23c9a24d'>ﷲ</text></svg>">
 
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Cairo:wght@400;600;700;900&family=Noto+Kufi+Arabic&family=Scheherazade+New&display=swap" rel="stylesheet">
     
     <style>
-        /* === نفس التنسيقات السابقة بالكامل === */
         :root { --primary: #1a7a5a; --primary-light: #2daf87; --gold: #c9a24d; --dark: #1a1a2e; --light: #faf8f5; --white: #ffffff; --gray: #eae7e2; --text: #2c3e50; }
+        .dark-mode { --light:#1a1a2e; --white:#16213e; --gray:#2a2a4a; --text:#e0e0e0; }
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Cairo',sans-serif; background:var(--light); color:var(--text); line-height:1.8; }
-        .progress-bar { position:fixed; top:0; right:0; height:4px; background:linear-gradient(90deg,var(--primary),var(--gold)); z-index:10000; }
+        body { font-family:'Cairo',sans-serif; background:var(--light); color:var(--text); line-height:1.8; transition:0.3s; }
         .main-header { background:linear-gradient(135deg,var(--dark),#16213e); padding:1rem 0; position:sticky; top:0; z-index:1000; border-bottom:3px solid var(--gold); }
         .header-container { max-width:1400px; margin:0 auto; padding:0 2rem; display:flex; justify-content:space-between; align-items:center; }
         .logo { display:flex; align-items:center; gap:12px; cursor:pointer; }
-        .logo-icon { width:55px; height:55px; background:linear-gradient(135deg,var(--gold),#e0c77d); border-radius:15px; display:flex; align-items:center; justify-content:center; font-size:1.8rem; color:var(--dark); animation:pulse 2s infinite; transform:rotate(-5deg); }
+        .logo-icon { width:55px; height:55px; background:linear-gradient(135deg,var(--gold),#e0c77d); border-radius:15px; display:flex; align-items:center; justify-content:center; font-size:1.8rem; color:var(--dark); animation:pulse 2s infinite; }
         @keyframes pulse { 0%,100%{box-shadow:0 0 25px rgba(201,162,77,0.4);} 50%{box-shadow:0 0 50px rgba(201,162,77,0.8);} }
         .logo-text { color:#fff; font-size:1.6rem; font-weight:900; } .logo-text span { color:var(--gold); }
         .theme-toggle { background:rgba(255,255,255,0.1); border:none; color:var(--gold); width:45px; height:45px; border-radius:15px; cursor:pointer; font-size:1.2rem; }
-        .nav-menu { background:var(--white); position:sticky; top:90px; z-index:999; box-shadow:0 4px 20px rgba(0,0,0,0.08); border-bottom:2px solid var(--gray); }
+        .nav-menu { background:var(--white); position:sticky; top:90px; z-index:999; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
+        .nav-container { max-width:1400px; margin:0 auto; display:flex; overflow-x:auto; padding:0 2rem; }
+        .nav-item { padding:15px 22px; white-space:nowrap; cursor:pointer; font-weight:700; border-bottom:4px solid transparent; display:flex; align-items:center; gap:8px; color:var(--text); }
+        .nav-item i { color:var(--gold); }
+        .nav-item.active { color:var(--primary); border-bottom-color:var(--primary); background:rgba(26,122,90,0.05); }
+        .main-content { max-width:1400px; margin:2rem auto; padding:0 2rem; }
+        .section { display:none; animation:fadeInUp 0.6s; }
+        .section.active { display:block; }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(40px);} to{opacity:1;transform:translateY(0);} }
+        .welcome-card { background:linear-gradient(135deg,#1a7a5a,#0d4f3a); border-radius:30px; padding:4rem 3rem; text-align:center; color:#fff; margin-bottom:2rem; }
+        .quran-verse { font-family:'Amiri Quran','Scheherazade New',serif; font-size:2rem; color:#e0c77d; margin:1.5rem 0; line-height:2.2; }
+        .cards-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; margin:2.5rem 0; }
+        .feature-card { background:var(--white); border-radius:20px; padding:2rem; text-align:center; box-shadow:0 4px 20px rgba(0,0,0,0.08); cursor:pointer; border:2px solid transparent; transition:all 0.3s; }
+        .feature-card:hover { transform:translateY(-10px); border-color:var(--gold); }
+        .card-icon { width:70px; height:70px; background:var(--primary); border-radius:20px; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; font-size:2rem; color:#fff; }
+        .badge { background:var(--gold); color:var(--dark); padding:5px 15px; border-radius:50px; font-size:0.8rem; font-weight:700; display:inline-block; margin-top:0.5rem; }
+        .quran-container { background:var(--white); border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,0.12); overflow:hidden; }
+        .quran-header { background:linear-gradient(135deg,#0d4f3a,var(--primary)); padding:2rem; text-align:center; color:#fff; }
+        .surah-navigation { display:flex; gap:1rem; padding:1.5rem; background:var(--gray); flex-wrap:wrap; justify-content:center; }
+        .surah-select { padding:12px 25px; border-radius:50px; border:2px solid var(--primary); font-family:'Cairo',sans-serif; font-size:1rem; background:var(--white); color:var(--text); }
+        .quran-content { padding:2rem; max-height:600px; overflow-y:auto; }
+        .bismillah { text-align:center; font-family:'Amiri Quran',serif; font-size:2.5rem; color:var(--primary); margin:1.5rem 0; }
+        .ayah { font-family:'Amiri Quran','Scheherazade New',serif; font-size:1.6rem; line-height:2.5; padding:0.8rem; margin:0.5rem 0; border-radius:12px; display:flex; gap:10px; }
+        .ayah:hover { background:var(--gray); }
+        .ayah-number { min-width:35px; height:35px; background:var(--primary); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; margin-top:5px; }
+        .tasbih-main-container { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+        @media(max-width:768px){ .tasbih-main-container{grid-template-columns:1fr;} }
+        .tasbih-counter-box { background:var(--white); border-radius:20px; padding:2.5rem; text-align:center; box-shadow:0 8px 40px rgba(0,0,0,0.12); }
+        .counter-display { font-size:5rem; font-weight:900; color:var(--primary); font-family:'Noto Kufi Arabic',sans-serif; background:var(--gray); border-radius:20px; padding:1.5rem; border:3px solid var(--primary-light); }
+        .counter-btn { padding:14px 35px; border:none; border-radius:50px; font-weight:700; cursor:pointer; }
+        .btn-increment { background:var(--primary); color:#fff; } .btn-reset { background:var(--gray); }
+        .preset-btn { padding:15px; background:var(--gray); border:2px solid transparent; border-radius:12px; cursor:pointer; font-weight:600; }
+        .preset-btn.active-preset { border-color:var(--primary); background:rgba(26,122,90,0.1); }
+        .azkar-container { display:grid; gap:1rem; }
+        .zekr-card { background:var(--white); border-radius:20px; padding:1.8rem; box-shadow:0 4px 20px rgba(0,0,0,0.08); border-right:5px solid var(--primary); display:flex; justify-content:space-between; align-items:center; }
+        .zekr-text { font-size:1.15rem; font-weight:600; }
+        .zekr-complete-btn { width:45px; height:45px; border-radius:50%; border:2px solid #28a745; background:transparent; color:#28a745; cursor:pointer; }
+        .qiyam-layout { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+        .qiyam-table { background:var(--white); border-radius:20px; overflow:hidden; }
+        .qiyam-table th { background:var(--primary); color:#fff; padding:1rem; }
+        .qiyam-table td { padding:1rem; text-align:center; border-bottom:1px solid var(--gray); }
+        .info-card { background:var(--white); border-radius:20px; padding:1.5rem; border-right:4px solid var(--gold); }
+        .footer { background:var(--dark); color:rgba(255,255,255,0.7); text-align:center; padding:2.5rem; margin-top:3rem; border-top:3px solid var(--gold); }
+        .notification { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:var(--primary); color:#fff; padding:15px 30px; border-radius:50px; z-index:99999; }
+    </style>
+</head>
+<body>
+    <div class="install-banner" id="installBanner" style="position:fixed;bottom:20px;right:20px;background:var(--primary);color:#fff;padding:15px 25px;border-radius:20px;z-index:9999;display:none;cursor:pointer;" onclick="installApp()">
+        <i class="fas fa-download"></i> تثبيت التطبيق
+    </div>
+
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo" onclick="navigateTo('home')"><div class="logo-icon">ﷲ</div><div class="logo-text">الرحيق <span>المختوم</span></div></div>
+            <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+        </div>
+    </header>
+
+    <nav class="nav-menu">
+        <div class="nav-container" id="navContainer"></div>
+    </nav>
+
+    <main class="main-content" id="mainContent"></main>
+
+    <footer class="footer">
+        <p>الرحيق المختوم - <strong>114 سورة كاملة</strong> | قال رسول الله ﷺ: "خيركم من تعلم القرآن وعلمه"</p>
+    </footer>
+
+    <script>
+        // ========== بيانات الأجزاء لكل سورة ==========
+        const juzInfo = {
+            1:1, 2:1, 3:3, 4:4, 5:6, 6:7, 7:8, 8:9, 9:10, 10:11,
+            11:11, 12:12, 13:13, 14:13, 15:14, 16:14, 17:15, 18:15, 19:16, 20:16,
+            21:17, 22:17, 23:18, 24:18, 25:18, 26:19, 27:19, 28:20, 29:20, 30:21,
+            31:21, 32:21, 33:21, 34:22, 35:22, 36:22, 37:23, 38:23, 39:23, 40:24,
+            41:24, 42:25, 43:25, 44:25, 45:25, 46:26, 47:26, 48:26, 49:26, 50:26,
+            51:26, 52:27, 53:27, 54:27, 55:27, 56:27, 57:27, 58:28, 59:28, 60:28,
+            61:28, 62:28, 63:28, 64:28, 65:28, 66:28, 67:29, 68:29, 69:29, 70:29,
+            71:29, 72:29, 73:29, 74:29, 75:29, 76:29, 77:29, 78:30, 79:30, 80:30,
+            81:30, 82:30, 83:30, 84:30, 85:30, 86:30, 87:30, 88:30, 89:30, 90:30,
+            91:30, 92:30, 93:30, 94:30, 95:30, 96:30, 97:30, 98:30, 99:30, 100:30,
+            101:30, 102:30, 103:30, 104:30, 105:30, 106:30, 107:30, 108:30, 109:30, 110:30,
+            111:30, 112:30, 113:30, 114:30
+        };
+
+        const allSurahsList = [
+            {number:1,name:"الفاتحة",type:"مكية",ayahs:7},
+            {number:2,name:"البقرة",type:"مدنية",ayahs:286},
+            {number:3,name:"آل عمران",type:"مدنية",ayahs:200},
+            {number:4,name:"النساء",type:"مدنية",ayahs:176},
+            {number:5,name:"المائدة",type:"مدنية",ayahs:120},
+            {number:6,name:"الأنعام",type:"مكية",ayahs:165},
+            {number:7,name:"الأعراف",type:"مكية",ayahs:206},
+            {number:8,name:"الأنفال",type:"مدنية",ayahs:75},
+            {number:9,name:"التوبة",type:"مدنية",ayahs:129},
+            {number:10,name:"يونس",type:"مكية",ayahs:109},
+            {number:11,name:"هود",type:"مكية",ayahs:123},
+            {number:12,name:"يوسف",type:"مكية",ayahs:111},
+            {number:13,name:"الرعد",type:"مدنية",ayahs:43},
+            {number:14,name:"إبراهيم",type:"مكية",ayahs:52},
+            {number:15,name:"الحجر",type:"مكية",ayahs:99},
+            {number:16,name:"النحل",type:"مكية",ayahs:128},
+            {number:17,name:"الإسراء",type:"مكية",ayahs:111},
+            {number:18,name:"الكهف",type:"مكية",ayahs:110},
+            {number:19,name:"مريم",type:"مكية",ayahs:98},
+            {number:20,name:"طه",type:"مكية",ayahs:135},
+            {number:21,name:"الأنبياء",type:"مكية",ayahs:112},
+            {number:22,name:"الحج",type:"مدنية",ayahs:78},
+            {number:23,name:"المؤمنون",type:"مكية",ayahs:118},
+            {number:24,name:"النور",type:"مدنية",ayahs:64},
+            {number:25,name:"الفرقان",type:"مكية",ayahs:77},
+            {number:26,name:"الشعراء",type:"مكية",ayahs:227},
+            {number:27,name:"النمل",type:"مكية",ayahs:93},
+            {number:28,name:"القصص",type:"مكية",ayahs:88},
+            {number:29,name:"العنكبوت",type:"مكية",ayahs:69},
+            {number:30,name:"الروم",type:"مكية",ayahs:60},
+            {number:31,name:"لقمان",type:"مكية",ayahs:34},
+            {number:32,name:"السجدة",type:"مكية",ayahs:30},
+            {number:33,name:"الأحزاب",type:"مدنية",ayahs:73},
+            {number:34,name:"سبأ",type:"مكية",ayahs:54},
+            {number:35,name:"فاطر",type:"مكية",ayahs:45},
+            {number:36,name:"يس",type:"مكية",ayahs:83},
+            {number:37,name:"الصافات",type:"مكية",ayahs:182},
+            {number:38,name:"ص",type:"مكية",ayahs:88},
+            {number:39,name:"الزمر",type:"مكية",ayahs:75},
+            {number:40,name:"غافر",type:"مكية",ayahs:85},
+            {number:41,name:"فصلت",type:"مكية",ayahs:54},
+            {number:42,name:"الشورى",type:"مكية",ayahs:53},
+            {number:43,name:"الزخرف",type:"مكية",ayahs:89},
+            {number:44,name:"الدخان",type:"مكية",ayahs:59},
+            {number:45,name:"الجاثية",type:"مكية",ayahs:37},
+            {number:46,name:"الأحقاف",type:"مكية",ayahs:35},
+            {number:47,name:"محمد",type:"مدنية",ayahs:38},
+            {number:48,name:"الفتح",type:"مدنية",ayahs:29},
+            {number:49,name:"الحجرات",type:"مدنية",ayahs:18},
+            {number:50,name:"ق",type:"مكية",ayahs:45},
+            {number:51,name:"الذاريات",type:"مكية",ayahs:60},
+            {number:52,name:"الطور",type:"مكية",ayahs:49},
+            {number:53,name:"النجم",type:"مكية",ayahs:62},
+            {number:54,name:"القمر",type:"مكية",ayahs:55},
+            {number:55,name:"الرحمن",type:"مدنية",ayahs:78},
+            {number:56,name:"الواقعة",type:"مكية",ayahs:96},
+            {number:57,name:"الحديد",type:"مدنية",ayahs:29},
+            {number:58,name:"المجادلة",type:"مدنية",ayahs:22},
+            {number:59,name:"الحشر",type:"مدنية",ayahs:24},
+            {number:60,name:"الممتحنة",type:"مدنية",ayahs:13},
+            {number:61,name:"الصف",type:"مدنية",ayahs:14},
+            {number:62,name:"الجمعة",type:"مدنية",ayahs:11},
+            {number:63,name:"المنافقون",type:"مدنية",ayahs:11},
+            {number:64,name:"التغابن",type:"مدنية",ayahs:18},
+            {number:65,name:"الطلاق",type:"مدنية",ayahs:12},
+            {number:66,name:"التحريم",type:"مدنية",ayahs:12},
+            {number:67,name:"الملك",type:"مكية",ayahs:30},
+            {number:68,name:"القلم",type:"مكية",ayahs:52},
+            {number:69,name:"الحاقة",type:"مكية",ayahs:52},
+            {number:70,name:"المعارج",type:"مكية",ayahs:44},
+            {number:71,name:"نوح",type:"مكية",ayahs:28},
+            {number:72,name:"الجن",type:"مكية",ayahs:28},
+            {number:73,name:"المزمل",type:"مكية",ayahs:20},
+            {number:74,name:"المدثر",type:"مكية",ayahs:56},
+            {number:75,name:"القيامة",type:"مكية",ayahs:40},
+            {number:76,name:"الإنسان",type:"مدنية",ayahs:31},
+            {number:77,name:"المرسلات",type:"مكية",ayahs:50},
+            {number:78,name:"النبأ",type:"مكية",ayahs:40},
+            {number:79,name:"النازعات",type:"مكية",ayahs:46},
+            {number:80,name:"عبس",type:"مكية",ayahs:42},
+            {number:81,name:"التكوير",type:"مكية",ayahs:29},
+            {number:82,name:"الإنفطار",type:"مكية",ayahs:19},
+            {number:83,name:"المطففين",type:"مكية",ayahs:36},
+            {number:84,name:"الإنشقاق",type:"مكية",ayahs:25},
+            {number:85,name:"البروج",type:"مكية",ayahs:22},
+            {number:86,name:"الطارق",type:"مكية",ayahs:17},
+            {number:87,name:"الأعلى",type:"مكية",ayahs:19},
+            {number:88,name:"الغاشية",type:"مكية",ayahs:26},
+            {number:89,name:"الفجر",type:"مكية",ayahs:30},
+            {number:90,name:"البلد",type:"مكية",ayahs:20},
+            {number:91,name:"الشمس",type:"مكية",ayahs:15},
+            {number:92,name:"الليل",type:"مكية",ayahs:21},
+            {number:93,name:"الضحى",type:"مكية",ayahs:11},
+            {number:94,name:"الشرح",type:"مكية",ayahs:8},
+            {number:95,name:"التين",type:"مكية",ayahs:8},
+            {number:96,name:"العلق",type:"مكية",ayahs:19},
+            {number:97,name:"القدر",type:"مكية",ayahs:5},
+            {number:98,name:"البينة",type:"مدنية",ayahs:8},
+            {number:99,name:"الزلزلة",type:"مدنية",ayahs:8},
+            {number:100,name:"العاديات",type:"مكية",ayahs:11},
+            {number:101,name:"القارعة",type:"مكية",ayahs:11},
+            {number:102,name:"التكاثر",type:"مكية",ayahs:8},
+            {number:103,name:"العصر",type:"مكية",ayahs:3},
+            {number:104,name:"الهمزة",type:"مكية",ayahs:9},
+            {number:105,name:"الفيل",type:"مكية",ayahs:5},
+            {number:106,name:"قريش",type:"مكية",ayahs:4},
+            {number:107,name:"الماعون",type:"مكية",ayahs:7},
+            {number:108,name:"الكوثر",type:"مكية",ayahs:3},
+            {number:109,name:"الكافرون",type:"مكية",ayahs:6},
+            {number:110,name:"النصر",type:"مدنية",ayahs:3},
+            {number:111,name:"المسد",type:"مكية",ayahs:5},
+            {number:112,name:"الإخلاص",type:"مكية",ayahs:4},
+            {number:113,name:"الفلق",type:"مكية",ayahs:5},
+            {number:114,name:"الناس",type:"مكية",ayahs:6}
+        ];
+
+        const QURAN_API = 'https://api.alquran.cloud/v1';
+
+        // ========== الأذكار والأدعية ==========
+        const morningAzkarData = [
+            {id:1,zekr:"أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ. اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ... (آية الكرسي)",count:1,source:"القرآن الكريم",category:"morning"},
+            {id:2,zekr:"قُلْ هُوَ اللَّهُ أَحَدٌ (الإخلاص)",count:3,source:"القرآن الكريم",category:"morning"},
+            {id:3,zekr:"قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ (الفلق)",count:3,source:"القرآن الكريم",category:"morning"},
+            {id:4,zekr:"قُلْ أَعُوذُ بِرَبِّ النَّاسِ (الناس)",count:3,source:"القرآن الكريم",category:"morning"},
+            {id:5,zekr:"أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ",count:1,source:"حديث شريف",category:"morning"},
+            {id:6,zekr:"اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ",count:1,source:"حديث شريف",category:"morning"},
+            {id:7,zekr:"سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",count:100,source:"حديث شريف",category:"morning"},
+            {id:8,zekr:"لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",count:10,source:"حديث شريف",category:"morning"},
+            {id:9,zekr:"اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلًا مُتَقَبَّلًا",count:1,source:"حديث شريف",category:"morning"},
+            {id:10,zekr:"يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ",count:3,source:"حديث شريف",category:"morning"},
+            {id:11,zekr:"اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ... (سيد الاستغفار)",count:1,source:"حديث شريف",category:"morning"},
+            {id:12,zekr:"اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي",count:3,source:"حديث شريف",category:"morning"},
+            {id:13,zekr:"حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ، عَلَيْهِ تَوَكَّلْتُ، وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",count:7,source:"القرآن الكريم",category:"morning"},
+            {id:14,zekr:"اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَمِنَ الْعَجْزِ وَالْكَسَلِ",count:1,source:"حديث شريف",category:"morning"},
+            {id:15,zekr:"رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا",count:3,source:"حديث شريف",category:"morning"}
+        ];
+        const eveningAzkarData = [
+            {id:16,zekr:"أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ. اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ... (آية الكرسي)",count:1,source:"القرآن الكريم",category:"evening"},
+            {id:17,zekr:"أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ",count:1,source:"حديث شريف",category:"evening"},
+            {id:18,zekr:"اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ",count:1,source:"حديث شريف",category:"evening"},
+            {id:19,zekr:"أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",count:3,source:"حديث شريف",category:"evening"},
+            {id:20,zekr:"اللَّهُمَّ إِنِّي أَمْسَيْتُ أُشْهِدُكَ وَأُشْهِدُ حَمَلَةَ عَرْشِكَ أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلَّا أَنْتَ",count:1,source:"حديث شريف",category:"evening"},
+            {id:21,zekr:"سُبْحَانَ اللَّهِ وَبِحَمْدِهِ عَدَدَ خَلْقِهِ وَرِضَا نَفْسِهِ وَزِنَةَ عَرْشِهِ وَمِدَادَ كَلِمَاتِهِ",count:3,source:"حديث شريف",category:"evening"},
+            {id:22,zekr:"قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ (الفلق)",count:3,source:"القرآن الكريم",category:"evening"},
+            {id:23,zekr:"قُلْ أَعُوذُ بِرَبِّ النَّاسِ (الناس)",count:3,source:"القرآن الكريم",category:"evening"},
+            {id:24,zekr:"اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ",count:10,source:"حديث شريف",category:"evening"},
+            {id:25,zekr:"لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ",count:3,source:"القرآن الكريم",category:"evening"},
+            {id:26,zekr:"اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ",count:3,source:"حديث شريف",category:"evening"},
+            {id:27,zekr:"بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ",count:3,source:"حديث شريف",category:"evening"}
+        ];
+        const duaData = [
+            {id:28,zekr:"رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",source:"البقرة - 201",category:"dua"},
+            {id:29,zekr:"رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي وَاحْلُلْ عُقْدَةً مِنْ لِسَانِي",source:"طه - 25-28",category:"dua"},
+            {id:30,zekr:"اللَّهُمَّ إِنِّي أَسْأَلُكَ الْهُدَى وَالتُّقَى وَالْعَفَافَ وَالْغِنَى",source:"حديث شريف",category:"dua"},
+            {id:31,zekr:"رَبَّنَا لَا تُؤَاخِذْنَا إِنْ نَسِينَا أَوْ أَخْطَأْنَا",source:"البقرة - 286",category:"dua"},
+            {id:32,zekr:"اللَّهُمَّ اغْفِرْ لِي وَارْحَمْنِي وَعَافِنِي وَاهْدِنِي وَارْزُقْنِي",source:"حديث شريف",category:"dua"},
+            {id:33,zekr:"رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ",source:"الفرقان - 74",category:"dua"},
+            {id:34,zekr:"اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ زَوَالِ نِعْمَتِكَ وَتَحَوُّلِ عَافِيَتِكَ",source:"حديث شريف",category:"dua"},
+            {id:35,zekr:"رَبِّ أَوْزِعْنِي أَنْ أَشْكُرَ نِعْمَتَكَ الَّتِي أَنْعَمْتَ عَلَيَّ",source:"النمل - 19",category:"dua"},
+            {id:36,zekr:"اللَّهُمَّ إِنِّي أَسْأَلُكَ الْجَنَّةَ وَمَا قَرَّبَ إِلَيْهَا مِنْ قَوْلٍ أَوْ عَمَلٍ",source:"حديث شريف",category:"dua"},
+            {id:37,zekr:"يَا مُقَلِّبَ الْقُلُوبِ ثَبِّتْ قَلْبِي عَلَى دِينِكَ",source:"حديث شريف",category:"dua"},
+            {id:38,zekr:"اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ عِلْمٍ لَا يَنْفَعُ، وَمِنْ قَلْبٍ لَا يَخْشَعُ",source:"حديث شريف",category:"dua"},
+            {id:39,zekr:"رَبَّنَا تَقَبَّلْ مِنَّا إِنَّكَ أَنْتَ السَّمِيعُ الْعَلِيمُ",source:"البقرة - 127",category:"dua"},
+            {id:40,zekr:"اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ (الصلاة الإبراهيمية)",source:"حديث شريف",category:"dua"},
+            {id:41,zekr:"رَبَّنَا اغْفِرْ لَنَا ذُنُوبَنَا وَإِسْرَافَنَا فِي أَمْرِنَا وَثَبِّتْ أَقْدَامَنَا",source:"آل عمران - 147",category:"dua"},
+            {id:42,zekr:"اللَّهُمَّ ارْحَمْنِي بِتَرْكِ الْمَعَاصِي أَبَدًا مَا أَبْقَيْتَنِي",source:"دعاء مأثور",category:"dua"}
+        ];
+        const ruqyaData = [
+            {id:43,zekr:"الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ... (سورة الفاتحة كاملة)",source:"الرقية الشرعية",category:"ruqya"},
+            {id:44,zekr:"اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ... (آية الكرسي)",source:"الرقية الشرعية",category:"ruqya"},
+            {id:45,zekr:"آمَنَ الرَّسُولُ بِمَا أُنزِلَ إِلَيْهِ مِن رَّبِّهِ... (البقرة 285-286)",source:"الرقية الشرعية",category:"ruqya"},
+            {id:46,zekr:"قُلْ هُوَ اللَّهُ أَحَدٌ... (الإخلاص)",source:"الرقية الشرعية",category:"ruqya"},
+            {id:47,zekr:"قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ... (الفلق)",source:"الرقية الشرعية",category:"ruqya"},
+            {id:48,zekr:"قُلْ أَعُوذُ بِرَبِّ النَّاسِ... (الناس)",source:"الرقية الشرعية",category:"ruqya"},
+            {id:49,zekr:"بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ (3 مرات)",source:"الرقية الشرعية",category:"ruqya"},
+            {id:50,zekr:"أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ (3 مرات)",source:"الرقية الشرعية",category:"ruqya"},
+            {id:51,zekr:"بِسْمِ اللَّهِ أَرْقِيكَ، مِنْ كُلِّ شَيْءٍ يُؤْذِيكَ، اللَّهُ يَشْفِيكَ",source:"الرقية الشرعية",category:"ruqya"},
+            {id:52,zekr:"اللَّهُمَّ رَبَّ النَّاسِ، أَذْهِبِ الْبَأْسَ، اشْفِ أَنْتَ الشَّافِي",source:"الرقية الشرعية",category:"ruqya"}
+        ];
+
+        // ========== أدعية الأموات (جديد) ==========
+        const mayetDuaData = [
+            {zekr:"اللَّهُمَّ اغْفِرْ لَهُ وَارْحَمْهُ، وَعَافِهِ وَاعْفُ عَنْهُ، وَأَكْرِمْ نُزُلَهُ، وَوَسِّعْ مُدْخَلَهُ، وَاغْسِلْهُ بِالْمَاءِ وَالثَّلْجِ وَالْبَرَدِ، وَنَقِّهِ مِنَ الذُّنُوبِ وَالْخَطَايَا كَمَا يُنَقَّى الثَّوْبُ الْأَبْيَضُ مِنَ الدَّنَسِ",source:"حديث شريف"},
+            {zekr:"اللَّهُمَّ أَبْدِلْهُ دَارًا خَيْرًا مِنْ دَارِهِ، وَأَهْلًا خَيْرًا مِنْ أَهْلِهِ، وَزَوْجًا خَيْرًا مِنْ زَوْجِهِ، وَأَدْخِلْهُ الْجَنَّةَ، وَأَعِذْهُ مِنْ عَذَابِ الْقَبْرِ وَمِنْ عَذَابِ النَّارِ",source:"حديث شريف"},
+            {zekr:"اللَّهُمَّ اجْعَلْ قَبْرَهُ رَوْضَةً مِنْ رِيَاضِ الْجَنَّةِ، وَلَا تَجْعَلْهُ حُفْرَةً مِنْ حُفَرِ النَّارِ",source:"حديث شريف"},
+            {zekr:"اللَّهُمَّ آنِسْ وَحْشَتَهُ، وَارْحَمْ غُرْبَتَهُ، وَاجْعَلْ الْجَنَّةَ مَأْوَاهُ",source:"دعاء مأثور"},
+            {zekr:"اللَّهُمَّ يَمِّنْ كِتَابَهُ، وَهَوِّنْ حِسَابَهُ، وَثَقِّلْ بِالْحَسَنَاتِ مِيزَانَهُ",source:"دعاء مأثور"},
+            {zekr:"اللَّهُمَّ لَا تُحْرِمْنَا أَجْرَهُ، وَلَا تَفْتِنَّا بَعْدَهُ، وَاغْفِرْ لَنَا وَلَهُ",source:"حديث شريف"},
+            {zekr:"اللَّهُمَّ إِنَّهُ فِي ذِمَّتِكَ وَحَبْلِ جِوَارِكَ، فَقِهِ فِتْنَةَ الْقَبْرِ وَعَذَابَ النَّارِ، وَأَنْتَ أَهْلُ الْوَفَاءِ وَالْحَقِّ",source:"حديث شريف"},
+            {zekr:"اللَّهُمَّ ارْفَعْ دَرَجَتَهُ فِي الْمَهْدِيِّينَ، وَاخْلُفْهُ فِي عَقِبِهِ فِي الْغَابِرِينَ، وَاغْفِرْ لَنَا وَلَهُ يَا رَبَّ الْعَالَمِينَ، وَافْسَحْ لَهُ فِي قَبْرِهِ، وَنَوِّرْ لَهُ فِيهِ",source:"حديث شريف"},
+            {zekr:"اللَّهُمَّ إِنَّا نَتَوَسَّلُ بِكَ إِلَيْكَ، وَنُقْسِمُ بِكَ عَلَيْكَ، أَنْ تُنْزِلَهُ مَنْزِلَةَ الصَّالِحِينَ، وَأَنْ تَجْعَلَ قَبْرَهُ مُنِيرًا مُبَارَكًا",source:"دعاء"},
+            {zekr:"اللَّهُمَّ اجْعَلْهُ مِنْ الَّذِينَ سَعِدُوا فِي الْآخِرَةِ، وَأَلْحِقْهُ بِالنَّبِيِّينَ وَالصِّدِّيقِينَ وَالشُّهَدَاءِ وَالصَّالِحِينَ",source:"دعاء"},
+            {zekr:"سُبْحَانَ الَّذِي بِيَدِهِ مَلَكُوتُ كُلِّ شَيْءٍ وَإِلَيْهِ تُرْجَعُونَ، اللَّهُمَّ ارْحَمْ مَوْتَانَا وَمَوْتَى الْمُسْلِمِينَ أَجْمَعِينَ",source:"دعاء عام"}
+        ];
+
+        let tasbihCount = 0, totalSaved = 0, currentZekr = "سبحان الله";
+        let activeFilter = 'all';
+        let completedAzkar = JSON.parse(localStorage.getItem('completedAzkar') || '{}');
+
+        // ========== بناء الواجهة ==========
+        function buildNavigation() {
+            const items = [
+                {id:'home',icon:'fa-home',text:'الرئيسية'},
+                {id:'quran',icon:'fa-book-open',text:'القرآن'},
+                {id:'tasbih',icon:'fa-hand-peace',text:'التسبيح'},
+                {id:'azkar-morning',icon:'fa-sun',text:'أذكار الصباح'},
+                {id:'azkar-evening',icon:'fa-moon',text:'أذكار المساء'},
+                {id:'dua',icon:'fa-pray',text:'الأدعية'},
+                {id:'mayet-duas',icon:'fa-heart-broken',text:'أدعية الأموات'},
+                {id:'qiyam',icon:'fa-cloud-moon',text:'قيام الليل'},
+                {id:'ruqya',icon:'fa-heart',text:'الرقية'}
+            ];
+            document.getElementById('navContainer').innerHTML = items.map((item,i) => 
+                `<div class="nav-item ${i===0?'active':''}" data-section="${item.id}" onclick="navigateTo('${item.id}')"><i class="fas ${item.icon}"></i> ${item.text}</div>`
+            ).join('');
+        }
+
+        function buildHome() {
+            return `
+                <section class="section active" id="home">
+                    <div class="welcome-card">
+                        <h1>﴿ وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا ﴾</h1>
+                        <div class="quran-verse">إِنَّ هَٰذَا الْقُرْآنَ يَهْدِي لِلَّتِي هِيَ أَقْوَمُ</div>
+                    </div>
+                    <div class="cards-grid">
+                        ${[{icon:'fa-quran',title:'القرآن الكريم',desc:'114 سورة كاملة مع الأجزاء',section:'quran'},
+                           {icon:'fa-fingerprint',title:'التسبيح',desc:'عداد ذكي مع 12 ذكر',section:'tasbih'},
+                           {icon:'fa-sun',title:'أذكار الصباح',desc:'15 ذكر',section:'azkar-morning'},
+                           {icon:'fa-moon',title:'أذكار المساء',desc:'12 ذكر',section:'azkar-evening'},
+                           {icon:'fa-praying-hands',title:'الأدعية',desc:'15 دعاء',section:'dua'},
+                           {icon:'fa-heart-broken',title:'أدعية الأموات',desc:'11 دعاء',section:'mayet-duas'},
+                           {icon:'fa-cloud-moon',title:'قيام الليل',desc:'دليل كامل',section:'qiyam'},
+                           {icon:'fa-heart',title:'الرقية الشرعية',desc:'آيات وأدعية',section:'ruqya'}
+                        ].map(card => `
+                            <div class="feature-card" onclick="navigateTo('${card.section}')">
+                                <div class="card-icon"><i class="fas ${card.icon}"></i></div>
+                                <h3>${card.title}</h3><p>${card.desc}</p>
+                            </div>`).join('')}
+                    </div>
+                </section>`;
+        }
+
+        function buildQuranSection() {
+            const opts = allSurahsList.map(s => `<option value="${s.number}">${s.number}. ${s.name}</option>`).join('');
+            return `
+                <section class="section" id="quran">
+                    <div class="quran-container">
+                        <div class="quran-header"><h2>القرآن الكريم كاملاً</h2><p>معرفة الجزء لكل سورة</p></div>
+                        <div class="surah-navigation">
+                            <select class="surah-select" id="surahSelect" onchange="loadSurah()">${opts}</select>
+                        </div>
+                        <div class="quran-content" id="quranContent"><p style="text-align:center;padding:2rem;">اختر سورة لعرضها</p></div>
+                    </div>
+                </section>`;
+        }
+
+        function buildTasbih() {
+            return `
+                <section class="section" id="tasbih">
+                    <div class="tasbih-main-container">
+                        <div class="tasbih-counter-box">
+                            <div id="currentZekrLabel" style="font-size:1.5rem;color:var(--gold);">سبحان الله</div>
+                            <div class="counter-display" id="counterDisplay">0</div>
+                            <div style="display:flex;gap:1rem;justify-content:center;">
+                                <button class="counter-btn btn-increment" id="incrementBtn">+ تسبيحة</button>
+                                <button class="counter-btn btn-reset" id="resetBtn">تصفير</button>
+                            </div>
+                        </div>
+                        <div class="tasbih-presets" id="zekrPresets"></div>
+                    </div>
+                </section>`;
+        }
+
+        function buildStaticAzkar(id, title) {
+            return `<section class="section" id="${id}"><h2 style="text-align:center;color:var(--primary);padding:1rem;">${title}</h2><div class="azkar-container" id="${id}Container"></div></section>`;
+        }
+
+        function buildQiyam() {
+            return `
+                <section class="section" id="qiyam">
+                    <h2 style="text-align:center;color:var(--primary);">كيفية صلاة قيام الليل</h2>
+                    <div class="qiyam-layout">
+                        <div class="qiyam-table"><table><tr><th>الخطوة</th><th>الوصف</th></tr>
+                            <tr><td>1</td><td>النية</td></tr><tr><td>2</td><td>الوضوء</td></tr>
+                            <tr><td>3</td><td>ركعتان ركعتان</td></tr><tr><td>4</td><td>القراءة</td></tr>
+                            <tr><td>5</td><td>الوتر</td></tr></table></div>
+                        <div class="info-card"><h4>أفضل وقت</h4><p>الثلث الأخير من الليل</p></div>
+                    </div>
+                </section>`;
+        }
+
+        function loadAllContent() {
+            const main = document.getElementById('mainContent');
+            main.innerHTML = buildHome() + buildQuranSection() + buildTasbih() +
+                buildStaticAzkar('azkar-morning', 'أذكار الصباح') +
+                buildStaticAzkar('azkar-evening', 'أذكار المساء') +
+                buildStaticAzkar('dua', 'الأدعية المأثورة') +
+                buildStaticAzkar('mayet-duas', 'أدعية الأموات') +
+                buildStaticAzkar('ruqya', 'الرقية الشرعية') +
+                buildQiyam();
+        }
+
+        // ========== عرض الأذكار والأدعية ==========
+        function renderAzkar(data, containerId) {
+            const container = document.getElementById(containerId);
+            if(!container) return;
+            let filtered = data;
+            if(activeFilter === 'completed' && data[0]?.category) filtered = data.filter(item => completedAzkar[item.id]);
+            else if(activeFilter === 'not-completed' && data[0]?.category) filtered = data.filter(item => !completedAzkar[item.id]);
+            
+            container.innerHTML = filtered.map(item => {
+                const done = completedAzkar[item.id];
+                return `<div class="zekr-card ${done?'completed':''}">
+                    <div style="flex:1;"><p class="zekr-text">${item.zekr}</p><small>${item.source || ''}</small></div>
+                    <div style="display:flex;align-items:center;gap:1rem;">
+                        ${item.count ? `<span style="background:var(--primary);color:#fff;padding:5px 10px;border-radius:10px;">${item.count}x</span>` : ''}
+                        ${item.id ? `<button class="zekr-complete-btn ${done?'completed-btn':''}" onclick="toggleZekr(${item.id},'${containerId}','${item.category}')">${done?'✅':'⬜'}</button>` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // دالة مخصصة لعرض أدعية الأموات (لا تحتوي على أزرار إتمام)
+        function renderMayetDuas() {
+            const container = document.getElementById('mayet-duasContainer');
+            if(!container) return;
+            container.innerHTML = mayetDuaData.map(item => `
+                <div class="zekr-card">
+                    <div style="flex:1;"><p class="zekr-text">${item.zekr}</p><small>${item.source}</small></div>
+                </div>
+            `).join('');
+        }
+
+        window.toggleZekr = function(id, containerId, category) {
+            if(completedAzkar[id]) delete completedAzkar[id]; else completedAzkar[id]=true;
+            localStorage.setItem('completedAzkar', JSON.stringify(completedAzkar));
+            if(category === 'morning') renderAzkar(morningAzkarData, 'morningAzkarContainer');
+            else if(category === 'evening') renderAzkar(eveningAzkarData, 'eveningAzkarContainer');
+            else if(category === 'dua') renderAzkar(duaData, 'duaContainer');
+        };
+
+        function renderDuaList() { renderAzkar(duaData, 'duaContainer'); }
+        function renderRuqya() { renderAzkar(ruqyaData, 'ruqyaContainer'); }
+
+        // ========== تحميل السورة مع الجزء ==========
+        async function loadSurah() {
+            const num = parseInt(document.getElementById('surahSelect').value);
+            const content = document.getElementById('quranContent');
+            if(!num) return;
+            content.innerHTML = '<div style="text-align:center;padding:2rem;">جاري التحميل...</div>';
+            try {
+                const res = await fetch(`${QURAN_API}/surah/${num}/ar.uthmani`);
+                const data = await res.json();
+                const surah = allSurahsList.find(s=>s.number===num);
+                const juz = juzInfo[num] || '';
+                let html = `<div style="text-align:center;margin-bottom:1rem;"><strong>سورة ${surah.name}</strong> (${surah.type}) - الجزء ${juz} - عدد الآيات ${surah.ayahs}</div>`;
+                if(num!==9 && num!==1) html += `<div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>`;
+                html += data.data.ayahs.map(a => `<div class="ayah"><span class="ayah-number">${a.numberInSurah}</span><span>${a.text}</span></div>`).join('');
+                content.innerHTML = html;
+            } catch(e) {
+                content.innerHTML = '<p style="text-align:center;color:red;">تعذر تحميل السورة. تأكد من الاتصال بالإنترنت.</p>';
+            }
+        }
+
+        // ========== التسبيح ==========
+        function setupTasbih() {
+            const presets = [
+                "سبحان الله", "الحمد لله", "الله أكبر", "لا إله إلا الله",
+                "أستغفر الله", "لا حول ولا قوة إلا بالله", "سبحان الله وبحمده",
+                "سبحان الله العظيم", "سبحان الله وبحمده سبحان الله العظيم",
+                "اللهم صل على محمد", "حسبي الله ونعم الوكيل", "تبارك الله أحسن الخالقين",
+                "اللهم اغفر لي ولوالدي"
+            ];
+            document.getElementById('zekrPresets').innerHTML = presets.map(z => 
+                `<button class="preset-btn ${z===currentZekr?'active-preset':''}" onclick="selectZekr('${z}')">${z}</button>`
+            ).join('');
+            let count = 0;
+            const incBtn = document.getElementById('incrementBtn');
+            const resBtn = document.getElementById('resetBtn');
+            if(incBtn) incBtn.onclick = () => { count++; document.getElementById('counterDisplay').textContent = count; };
+            if(resBtn) resBtn.onclick = () => { count=0; document.getElementById('counterDisplay').textContent='0'; };
+        }
+        window.selectZekr = function(z) {
+            currentZekr = z;
+            document.getElementById('currentZekrLabel').textContent = z;
+            // تحديث الأزرار النشطة
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active-preset'));
+            const btns = document.querySelectorAll('.preset-btn');
+            btns.forEach(b => { if(b.textContent === z) b.classList.add('active-preset'); });
+            localStorage.setItem('currentZekr', z);
+        };
+
+        // ========== التنقل ==========
+        function navigateTo(sectionId) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            const navItem = document.querySelector(`[data-section="${sectionId}"]`);
+            if(navItem) navItem.classList.add('active');
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            const sec = document.getElementById(sectionId);
+            if(sec) sec.classList.add('active');
+            
+            // تعبئة المحتوى الديناميكي عند التفعيل
+            if(sectionId === 'azkar-morning') renderAzkar(morningAzkarData, 'morningAzkarContainer');
+            if(sectionId === 'azkar-evening') renderAzkar(eveningAzkarData, 'eveningAzkarContainer');
+            if(sectionId === 'dua') renderDuaList();
+            if(sectionId === 'mayet-duas') renderMayetDuas();
+            if(sectionId === 'ruqya') renderRuqya();
+        }
+
+        // ========== PWA ==========
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', e => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBanner').style.display = 'block';
+        });
+        window.installApp = function() {
+            if(deferredPrompt) { deferredPrompt.prompt(); }
+        };
+
+        // ========== بدء التشغيل ==========
+        function init() {
+            buildNavigation();
+            loadAllContent();
+            setupTasbih();
+            // استعادة العداد
+            if(localStorage.getItem('tasbihCount')) {
+                tasbihCount = parseInt(localStorage.getItem('tasbihCount'));
+                document.getElementById('counterDisplay').textContent = tasbihCount;
+            }
+            if('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+            }
+            // الوضع الليلي
+            const toggle = document.getElementById('themeToggle');
+            if(localStorage.getItem('darkMode')==='true') {
+                document.body.classList.add('dark-mode');
+                toggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            toggle.addEventListener('click',()=>{
+                document.body.classList.toggle('dark-mode');
+                const isDark = document.body.classList.contains('dark-mode');
+                localStorage.setItem('darkMode', isDark);
+                toggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            });
+        }
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>        .nav-menu { background:var(--white); position:sticky; top:90px; z-index:999; box-shadow:0 4px 20px rgba(0,0,0,0.08); border-bottom:2px solid var(--gray); }
         .nav-container { max-width:1400px; margin:0 auto; display:flex; overflow-x:auto; padding:0 2rem; }
         .nav-item { padding:15px 22px; white-space:nowrap; cursor:pointer; font-weight:700; border-bottom:4px solid transparent; display:flex; align-items:center; gap:8px; }
         .nav-item i { color:var(--gold); }
